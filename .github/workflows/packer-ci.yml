@@ -23,11 +23,11 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_GHACTIONS_PACKER }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      # - name: Install Packer
-      #   run: |
-      #     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-      #     sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-      #     sudo apt-get update && sudo apt-get install packer
+      - name: Install Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install packer
 
       - name: Install SOPS
         run: |
@@ -40,14 +40,11 @@ jobs:
           chmod +x ./decrypt_replace.sh  
           ./decrypt_replace.sh
 
-      - name: Display contents of jenkins.sh
-        run: cat jenkins.sh
+      - name: Initialize Packer
+        run: |
+          packer init .
 
-      # - name: Initialize Packer
-      #   run: |
-      #     packer init .
-
-      # - name: Build AMI with Packer
-      #   run: |
-      #     cd "Packer Scripts"
-      #     packer build build.pkr.hcl
+      - name: Build AMI with Packer
+        run: |
+          cd "Packer Scripts"
+          packer build build.pkr.hcl
