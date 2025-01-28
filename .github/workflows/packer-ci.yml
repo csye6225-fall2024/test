@@ -1,0 +1,53 @@
+# name: Build and Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-package:
+    name: Build Packer Image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set AWS environment variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_GHACTIONS_PACKER }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_GHACTIONS_PACKER }}" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
+
+      # - name: Install Packer
+      #   run: |
+      #     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      #     sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      #     sudo apt-get update && sudo apt-get install packer
+
+      - name: Install SOPS
+        run: |
+          curl -LO https://github.com/getsops/sops/releases/download/v3.9.3/sops-v3.9.3.linux.amd64
+          mv sops-v3.9.3.linux.amd64 /usr/local/bin/sops
+          chmod +x /usr/local/bin/sops
+
+      - name: Decrypt secrets and run decrypt.sh
+        run: |
+          chmod +x ./decrypt_replace.sh  
+          ./decrypt_replace.sh
+
+      - name: Display contents of jenkins.sh
+        run: cat jenkins.sh
+
+      # - name: Initialize Packer
+      #   run: |
+      #     packer init .
+
+      # - name: Build AMI with Packer
+      #   run: |
+      #     cd "Packer Scripts"
+      #     packer build build.pkr.hcl

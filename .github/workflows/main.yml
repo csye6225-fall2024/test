@@ -1,0 +1,33 @@
+# name: Spring Boot CI Workflow
+
+# on:
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     name: Jenkins Packer Scripts
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Install Packer
+#         run: |
+#           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+#           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+#           sudo apt-get update && sudo apt-get install packer
+
+#       - name: Initialize Packer
+#         run: |
+#           packer init .
+
+#       - name: Run Packer format check
+#         run: |
+#           packer fmt -check -recursive .
+
+#       - name: Run Packer validate
+#         run: |
+#           packer validate .
