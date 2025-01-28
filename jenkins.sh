@@ -120,12 +120,5 @@ else
 fi
 
 
-echo "Obtaining SSL certificate for $DOMAIN..."
-sudo certbot --nginx \
-    -d $DOMAIN \
-    --non-interactive \
-    --agree-tos \
-    -m $ADMIN_EMAIL
 
-sudo systemctl reload nginx
 

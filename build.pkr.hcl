@@ -32,10 +32,6 @@ variable "username" {
   default = "ubuntu"
 }
 
-variable "sg"{
-  type=string
-  default="sg-01e5eaa8de7439dda"
-}
 
 # variable "additional_account_id" {
 #   type    = string
@@ -83,7 +79,6 @@ source "amazon-ebs" "custom_ami" {
     volume_size           = var.volume_size
     volume_type           = var.volume_type
   }
-  security_group_id = var.sg
 
   tags = {
     Name = "Jenkins AMI"
